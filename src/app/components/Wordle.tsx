@@ -24,7 +24,7 @@ export default function Wordle() {
     {}
   );
   const [invalidWordMessages, setInvalidWordMessages] = useState<
-    Array<{ id: number; fadeOut: boolean }>
+    Array<{ id: number; fadeOut: boolean; message: string }>
   >([]);
 
   // Initialize game with random word
@@ -103,7 +103,44 @@ export default function Wordle() {
     if (!upperWords.includes(upperGuess)) {
       const messageId = Date.now();
       setInvalidWordMessages((prev) => {
-        const newMessages = [...prev, { id: messageId, fadeOut: false }];
+        const newMessages = [
+          ...prev,
+          { id: messageId, fadeOut: false, message: "Ikke et ord" },
+        ];
+        // Keep only the last 6 messages
+        return newMessages.slice(-6);
+      });
+
+      setTimeout(() => {
+        setInvalidWordMessages((prev) =>
+          prev.map((msg) =>
+            msg.id === messageId ? { ...msg, fadeOut: true } : msg
+          )
+        );
+        setTimeout(() => {
+          setInvalidWordMessages((prev) =>
+            prev.filter((msg) => msg.id !== messageId)
+          );
+        }, 300);
+      }, 1200);
+      return;
+    }
+
+    // Check if word has already been guessed
+    const previousGuesses = guesses.map((guessCells) =>
+      guessCells.map((cell) => cell.letter).join("")
+    );
+    if (previousGuesses.includes(upperGuess)) {
+      const messageId = Date.now();
+      setInvalidWordMessages((prev) => {
+        const newMessages = [
+          ...prev,
+          {
+            id: messageId,
+            fadeOut: false,
+            message: "Du har allerede gjettet dette ordet",
+          },
+        ];
         // Keep only the last 6 messages
         return newMessages.slice(-6);
       });
@@ -331,7 +368,7 @@ export default function Wordle() {
               pointerEvents: "none",
             }}
           >
-            Ikke et ord
+            {message.message}
           </div>
         ))}
 
