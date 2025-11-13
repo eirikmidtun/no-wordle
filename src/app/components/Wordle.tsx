@@ -234,15 +234,15 @@ export default function Wordle() {
     const getCellStyle = () => {
       const baseStyle = {
         display: "flex",
-        height: "5rem",
-        width: "5rem",
-        minWidth: "5rem",
-        maxWidth: "5rem",
+        height: "clamp(3rem, 12vw, 5rem)",
+        width: "clamp(3rem, 12vw, 5rem)",
+        minWidth: "clamp(3rem, 12vw, 5rem)",
+        maxWidth: "clamp(3rem, 12vw, 5rem)",
         alignItems: "center",
         justifyContent: "center",
         borderWidth: "2px",
         borderStyle: "solid",
-        fontSize: "2rem",
+        fontSize: "clamp(1.25rem, 5vw, 2rem)",
         fontWeight: "bold",
         textTransform: "uppercase" as const,
         transition: "all 0.3s",
@@ -288,7 +288,7 @@ export default function Wordle() {
     const { transform, ...cellContainerStyle } = cellStyle;
 
     return (
-      <div key={`${rowIndex}-${colIndex}`} style={cellContainerStyle}>
+      <div key={`${rowIndex}-${colIndex}`} style={cellContainerStyle} className="wordle-cell">
         <div
           style={{
             transform: transform,
@@ -338,14 +338,14 @@ export default function Wordle() {
   ];
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-gray-100 dark:bg-gray-900 p-4">
-      <div className="w-full max-w-lg space-y-8">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-gray-100 dark:bg-gray-900 p-2 sm:p-4">
+      <div className="w-full max-w-lg space-y-4 sm:space-y-8">
         {/* Header */}
         <div className="text-center">
-          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
+          <h1 className="text-2xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-1 sm:mb-2">
             Bokmordlee
           </h1>
-          <p className="text-gray-600 dark:text-gray-400">
+          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400">
             Gjett det norske ordet!
           </p>
         </div>
@@ -355,16 +355,18 @@ export default function Wordle() {
             key={message.id}
             className="fixed left-1/2 transform -translate-x-1/2 z-50"
             style={{
-              top: `${5 + index * 3.5}rem`,
+              top: `${Math.max(3, 4 + index * 2.5)}rem`,
               backgroundColor: "#000000",
               color: "#ffffff",
-              padding: "0.75rem 1.5rem",
+              padding: "clamp(0.5rem, 2vw, 0.75rem) clamp(1rem, 3vw, 1.5rem)",
               borderRadius: "0.5rem",
-              fontSize: "0.875rem",
+              fontSize: "clamp(0.75rem, 2.5vw, 0.875rem)",
               fontWeight: "500",
               opacity: message.fadeOut ? 0 : 1,
               transition: "opacity 0.3s ease-out",
               pointerEvents: "none",
+              maxWidth: "90vw",
+              textAlign: "center",
             }}
           >
             {message.message}
@@ -374,12 +376,12 @@ export default function Wordle() {
         {/* Game State Message */}
         {gameState === "won" && (
           <div className="text-center">
-            <p className="text-2xl font-bold text-green-600 dark:text-green-400 mb-4">
+            <p className="text-lg sm:text-2xl font-bold text-green-600 dark:text-green-400 mb-3 sm:mb-4 px-2">
               Gratulerer! Du gjettet ordet!
             </p>
             <button
               onClick={resetGame}
-              className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+              className="px-4 sm:px-6 py-2 text-sm sm:text-base bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
             >
               Spill igjen
             </button>
@@ -388,15 +390,15 @@ export default function Wordle() {
 
         {gameState === "lost" && (
           <div className="text-center">
-            <p className="text-2xl font-bold text-red-600 dark:text-red-400 mb-2">
+            <p className="text-lg sm:text-2xl font-bold text-red-600 dark:text-red-400 mb-2 px-2">
               Du tapte!
             </p>
-            <p className="text-lg text-gray-700 dark:text-gray-300 mb-4">
+            <p className="text-base sm:text-lg text-gray-700 dark:text-gray-300 mb-3 sm:mb-4 px-2">
               Ordet var: <span className="font-bold">{targetWord}</span>
             </p>
             <button
               onClick={resetGame}
-              className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+              className="px-4 sm:px-6 py-2 text-sm sm:text-base bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
             >
               Spill igjen
             </button>
@@ -404,11 +406,11 @@ export default function Wordle() {
         )}
 
         {/* Game Grid */}
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-1 sm:gap-1">
           {Array.from({ length: MAX_GUESSES }).map((_, rowIndex) => (
             <div
               key={rowIndex}
-              className="flex gap-1 justify-center"
+              className="flex gap-0.5 sm:gap-1 justify-center"
               style={{ width: "100%", overflow: "visible" }}
             >
               {Array.from({ length: WORD_LENGTH }).map((_, colIndex) =>
@@ -419,23 +421,28 @@ export default function Wordle() {
         </div>
 
         {/* Virtual Keyboard */}
-        <div className="space-y-2">
+        <div className="space-y-1 sm:space-y-2 px-1">
           {keyboardRows.map((row, rowIndex) => (
-            <div key={rowIndex} className="flex gap-1 justify-center">
+            <div key={rowIndex} className="flex gap-0.5 sm:gap-1 justify-center flex-wrap wordle-keyboard-row">
               {row.map((key) => {
                 const isSpecial = key === "ENTER" || key === "BACKSPACE";
                 return (
                   <button
                     key={key}
                     onClick={() => handleKeyPress(key)}
+                    className={`touch-manipulation wordle-key ${isSpecial ? "wordle-key-special" : "wordle-key-regular"}`}
                     style={{
-                      paddingLeft: "1.25rem",
-                      paddingRight: "1.25rem",
-                      fontSize: isSpecial ? "1.125rem" : "1.5rem",
-                      height: "3.5rem",
+                      paddingLeft: "clamp(0.5rem, 2vw, 1.25rem)",
+                      paddingRight: "clamp(0.5rem, 2vw, 1.25rem)",
+                      fontSize: isSpecial 
+                        ? "clamp(0.75rem, 2.5vw, 1.125rem)" 
+                        : "clamp(0.875rem, 3vw, 1.5rem)",
+                      height: "clamp(2.5rem, 8vw, 3.5rem)",
+                      minWidth: isSpecial ? "clamp(3rem, 10vw, 5rem)" : "clamp(1.75rem, 6vw, 2.5rem)",
                       fontWeight: "600",
                       borderRadius: "0.375rem",
                       transition: "all 0.2s",
+                      flex: "0 1 auto",
                       ...(key === "ENTER" || key === "BACKSPACE"
                         ? { backgroundColor: "#787c7e", color: "#ffffff" }
                         : getKeyStyle(key)),

@@ -24,3 +24,78 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.touch-manipulation {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Desktop overrides - restore original sizes on sm and above */
+@media (min-width: 640px) {
+  .wordle-cell {
+    height: 5rem !important;
+    width: 5rem !important;
+    min-width: 5rem !important;
+    max-width: 5rem !important;
+    font-size: 2rem !important;
+  }
+
+  .wordle-keyboard-row {
+    flex-wrap: nowrap !important;
+  }
+
+  .wordle-key {
+    padding-left: 1.25rem !important;
+    padding-right: 1.25rem !important;
+    height: 3.5rem !important;
+    flex: 0 0 auto !important;
+  }
+
+  .wordle-key-regular {
+    font-size: 1.5rem !important;
+    min-width: 2.5rem !important;
+    width: auto !important;
+  }
+
+  .wordle-key-special {
+    font-size: 1.125rem !important;
+    min-width: 4rem !important;
+    width: auto !important;
+  }
+
+  .hangman-word-letter {
+    min-width: 3rem !important;
+    height: 4rem !important;
+    font-size: 2rem !important;
+    margin: 0 0.5rem !important;
+  }
+
+  .hangman-drawing {
+    width: 200px !important;
+    height: 250px !important;
+    margin: 2rem auto !important;
+  }
+
+  .hangman-keyboard-row {
+    flex-wrap: nowrap !important;
+  }
+
+  .hangman-key {
+    padding-left: 1.25rem !important;
+    padding-right: 1.25rem !important;
+    height: 3.5rem !important;
+    flex: 0 0 auto !important;
+  }
+
+  .hangman-key-regular {
+    font-size: 1.5rem !important;
+    min-width: 2.5rem !important;
+    width: auto !important;
+  }
+
+  .hangman-key-special {
+    font-size: 1.125rem !important;
+    min-width: 4rem !important;
+    width: auto !important;
+  }
+}
