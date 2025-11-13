@@ -350,7 +350,6 @@ export default function Wordle() {
           </p>
         </div>
 
-        {/* Invalid Word Messages */}
         {invalidWordMessages.map((message, index) => (
           <div
             key={message.id}
